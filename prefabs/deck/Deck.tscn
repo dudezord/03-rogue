@@ -1,0 +1,24 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://prefabs/deck/Deck.gd" type="Script" id=1]
+[ext_resource path="res://prefabs/card/Card.tscn" type="PackedScene" id=2]
+
+[node name="Deck" type="Spatial"]
+script = ExtResource( 1 )
+card_scene = ExtResource( 2 )
+
+[node name="Camera" type="Camera" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 4.82036 )
+
+[node name="Cards" type="Spatial" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -5.618, -5.131, 0 )
+
+[node name="TweenReposition" type="Tween" parent="."]
+
+[node name="TweenDestroy" type="Tween" parent="."]
+
+[node name="TweenFocus" type="Tween" parent="."]
+
+[node name="TweenUnfocus" type="Tween" parent="."]
+
+[connection signal="tween_completed" from="TweenDestroy" to="." method="_on_TweenDestroy_tween_completed"]
