@@ -21,6 +21,24 @@ var _astar = null
 
 var _dict = {}
 
+var _player_pos = [MAZE_COLUMNS / 2, MAZE_ROWS - 2]
+
+var _enemies = []
+var _enemies_pos = [
+	[1, 1], 
+	[MAZE_COLUMNS - 2, 1], 
+	
+	[1, MAZE_ROWS / 2], 
+	[MAZE_COLUMNS / 2, MAZE_ROWS / 2], 
+	[MAZE_COLUMNS - 2, MAZE_ROWS / 2], 
+	
+	[1, MAZE_ROWS - 2], 
+	[MAZE_COLUMNS - 2, MAZE_ROWS - 2]
+]
+
+var _end_pos = [MAZE_COLUMNS / 2, 3]
+
+
 func _ready():
 	$Plane.scale.x = MAZE_COLUMNS
 	$Plane.scale.z = MAZE_ROWS
@@ -49,26 +67,34 @@ func generate():
 		if _is_navigation_valid():
 			break
 
+	var player_cell = _get_cell(_player_pos[0], _player_pos[1])
+	$PlayerMaze.translation = player_cell.translation
+	
+	var end_cell = _get_cell(_end_pos[0], _end_pos[1])
+	$MobEndMaze.translation = end_cell.translation
+	
+	for enemy in _enemies:
+		enemy.queue_free()
+	_enemies.clear()
+	
+	for enemy_pos in _enemies_pos:
+		var enemy = preload("res://prefabs/mob_enemy/MobEnemyMaze.tscn").instance()
+		
+		var enemy_cell = _get_cell(enemy_pos[0], enemy_pos[1])
+		enemy.translation = enemy_cell.translation
+		add_child(enemy)
+		_enemies.append(enemy)
+
 
 func _is_navigation_valid():
-	var player = [0, MAZE_HEIGHT / 2]
-	var end = [MAZE_WIDTH - 3, MAZE_HEIGHT / 2]
-	
-	var player_index = _get_cell_index(player[0], player[1])
-	var end_index = _get_cell_index(end[0], end[1])
+	var player_index = _get_cell_index(_player_pos[0], _player_pos[1])
+	var end_index = _get_cell_index(_end_pos[0], _end_pos[1])
 	
 	var end_path = _astar.get_id_path(player_index, end_index)
 	if end_path.size() == 0:
 		return false
 	
-	var enemies = [
-		[1, 1], 
-		[MAZE_COLUMNS - 2, 1], 
-		[1, MAZE_ROWS - 2], 
-		[MAZE_COLUMNS - 2, MAZE_COLUMNS - 2]
-	]
-	
-	for enemy in enemies:
+	for enemy in _enemies_pos:
 		var enemy_index = _get_cell_index(enemy[0], enemy[1])
 		var enemy_path = _astar.get_id_path(player_index, enemy_index)
 		if enemy_path.size() == 0:

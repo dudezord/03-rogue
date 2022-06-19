@@ -1,6 +1,8 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://levels/maze/Maze.gd" type="Script" id=1]
+[ext_resource path="res://prefabs/player/PlayerMaze.tscn" type="PackedScene" id=2]
+[ext_resource path="res://prefabs/mob_end/MobEndMaze.tscn" type="PackedScene" id=3]
 
 [sub_resource type="PlaneMesh" id=1]
 
@@ -22,5 +24,9 @@ material/0 = SubResource( 2 )
 margin_right = 172.0
 margin_bottom = 94.0
 text = "Generate"
+
+[node name="PlayerMaze" parent="." instance=ExtResource( 2 )]
+
+[node name="MobEndMaze" parent="." instance=ExtResource( 3 )]
 
 [connection signal="pressed" from="ButtonGenerate" to="." method="_on_ButtonGenerate_pressed"]
