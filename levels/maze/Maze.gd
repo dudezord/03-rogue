@@ -38,14 +38,18 @@ var _enemies_pos = [
 
 var _end_pos = [MAZE_COLUMNS / 2, 3]
 
+var _current_cell = null
+
 
 func _ready():
+	Global.maze = self
+	Global.player_maze = $PlayerMaze
+	
 	$Plane.scale.x = MAZE_COLUMNS
 	$Plane.scale.z = MAZE_ROWS
 	
 	MAZE_WIDTH = $Plane.scale.x
 	MAZE_HEIGHT = $Plane.scale.z
-
 
 func generate():
 	while true:
@@ -69,6 +73,7 @@ func generate():
 
 	var player_cell = _get_cell(_player_pos[0], _player_pos[1])
 	$PlayerMaze.translation = player_cell.translation
+	_current_cell = player_cell
 	
 	var end_cell = _get_cell(_end_pos[0], _end_pos[1])
 	$MobEndMaze.translation = end_cell.translation
@@ -247,7 +252,66 @@ func _create_navigation():
 			if bottom_cell and not cell.get_node("S").visible:
 				var bottom_index = _get_cell_index(bottom_cell.x, bottom_cell.y)
 				_astar.connect_points(index, bottom_index)
+				
+	
+	Global.astar = _astar;
 
 
 func _on_ButtonGenerate_pressed():
 	generate()
+	_update_reachable_cells()
+
+
+func on_Cell_clicked(cell):
+	var start_pos = Vector2(Global.player_maze.translation.x, Global.player_maze.translation.z)
+	var end_pos = Vector2(cell.translation.x, cell.translation.z)
+	
+	var start_id = Global.astar.get_closest_point(start_pos)
+	var end_id = Global.astar.get_closest_point(end_pos)
+	
+	var path = Global.astar.get_point_path(start_id, end_id)
+	if path.size() > 1 and path.size() <= Global.action_points + 1:
+		Global.player_maze.move(path)
+		_current_cell = cell
+	
+	
+func on_Player_step():
+	Global.action_points -= 1
+	
+	$ButtonRoll.text = "Roll: %d" % Global.action_points
+	
+	for enemy in _enemies:
+		enemy.step()
+		
+	_update_reachable_cells()
+
+
+func _on_ButtonRoll_pressed():
+	Global.roll_action_points()
+	$ButtonRoll.text = "Roll: %d" % Global.action_points
+
+	_update_reachable_cells()
+	
+	
+func _update_reachable_cells():
+	for _cell in cells.get_children():
+		_cell.get_node("Ground").scale = Vector3.ZERO
+		
+	var start_pos = Vector2(_current_cell.translation.x, _current_cell.translation.z)
+	var start_id = Global.astar.get_closest_point(start_pos)
+	
+	for dx in range(-Global.action_points, Global.action_points + 1):
+		for dy in range(-Global.action_points, Global.action_points + 1):
+			if abs(dx) + abs(dy) > Global.action_points:
+				continue
+				
+			var end_coords = Vector2(_current_cell.x, _current_cell.y) + Vector2(dx, dy)
+			var end_cell = _get_cell(end_coords.x, end_coords.y)
+			
+			if not end_cell:
+				continue
+			
+			var end_id = _get_cell_index(end_coords.x, end_coords.y)
+			var path = Global.astar.get_id_path(start_id, end_id)
+			if path.size() > 0 and path.size() <= Global.action_points + 1:
+				end_cell.get_node("Ground").scale = Vector3.ONE

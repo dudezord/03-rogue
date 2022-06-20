@@ -13,9 +13,15 @@ _global_script_classes=[ {
 "class": "Card",
 "language": "GDScript",
 "path": "res://prefabs/card/Card.gd"
+}, {
+"base": "Spatial",
+"class": "Mob",
+"language": "GDScript",
+"path": "res://prefabs/mob/Mob.gd"
 } ]
 _global_script_class_icons={
-"Card": ""
+"Card": "",
+"Mob": ""
 }
 
 [application]
@@ -23,6 +29,10 @@ _global_script_class_icons={
 config/name="Infection"
 run/main_scene="res://levels/Game.tscn"
 config/icon="res://icon.png"
+
+[autoload]
+
+Global="*res://autoload/Global.gd"
 
 [physics]
 
