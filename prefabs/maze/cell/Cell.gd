@@ -1,3 +1,4 @@
+class_name Cell
 extends Spatial
 
 var x = -1

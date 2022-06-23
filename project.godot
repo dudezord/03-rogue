@@ -15,12 +15,18 @@ _global_script_classes=[ {
 "path": "res://prefabs/card/Card.gd"
 }, {
 "base": "Spatial",
+"class": "Cell",
+"language": "GDScript",
+"path": "res://prefabs/maze/cell/Cell.gd"
+}, {
+"base": "Spatial",
 "class": "Mob",
 "language": "GDScript",
 "path": "res://prefabs/mob/Mob.gd"
 } ]
 _global_script_class_icons={
 "Card": "",
+"Cell": "",
 "Mob": ""
 }
 

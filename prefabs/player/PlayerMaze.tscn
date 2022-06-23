@@ -16,3 +16,12 @@ mesh = SubResource( 1 )
 material/0 = SubResource( 2 )
 
 [node name="Tween" type="Tween" parent="."]
+
+[node name="RayCast" type="RayCast" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0 )
+collide_with_areas = true
+collide_with_bodies = false
+debug_shape_custom_color = Color( 1, 0, 0, 1 )
+debug_shape_thickness = 5
+
+[connection signal="tween_all_completed" from="Tween" to="." method="_on_Tween_tween_all_completed"]

@@ -199,34 +199,34 @@ func _update_cell(cell, region, outside_walls = true):
 	if cell.y == MAZE_ROWS - 1 || (cell.y == region[3] and randf() > prob_x):
 		walls |= Walls.S
 				
-	var has_north = (walls & Walls.N)
-	var has_south = (walls & Walls.S)
-	var has_west = (walls & Walls.W)
-	var has_east = (walls & Walls.E)
+	var has_north = (walls & Walls.N) > 0
+	var has_south = (walls & Walls.S) > 0
+	var has_west = (walls & Walls.W) > 0
+	var has_east = (walls & Walls.E) > 0
 	
-	cell.get_node("N").visible = has_north
-	cell.get_node("S").visible = has_south
-	cell.get_node("W").visible = has_west
-	cell.get_node("E").visible = has_east
+	cell.get_node("N").scale = Vector3.ONE * int(has_north)
+	cell.get_node("S").scale = Vector3.ONE * int(has_south)
+	cell.get_node("W").scale = Vector3.ONE * int(has_west)
+	cell.get_node("E").scale = Vector3.ONE * int(has_east)
 	
 	if outside_walls:
 		return
 		
 	var left_cell = _get_cell(cell.x - 1, cell.y)
 	if left_cell:
-		left_cell.get_node("E").visible = has_west
+		left_cell.get_node("E").scale = Vector3.ONE * int(has_west)
 		
 	var right_cell = _get_cell(cell.x + 1, cell.y)
 	if right_cell:
-		right_cell.get_node("W").visible = has_east
+		right_cell.get_node("W").scale = Vector3.ONE * int(has_east)
 		
 	var top_cell = _get_cell(cell.x, cell.y - 1)
 	if top_cell:
-		top_cell.get_node("S").visible = has_north
+		top_cell.get_node("S").scale = Vector3.ONE * int(has_north)
 		
 	var bottom_cell = _get_cell(cell.x, cell.y + 1)
 	if bottom_cell:
-		bottom_cell.get_node("N").visible = has_south
+		bottom_cell.get_node("N").scale = Vector3.ONE * int(has_south)
 
 
 func _create_navigation():
@@ -244,12 +244,12 @@ func _create_navigation():
 			var index = _get_cell_index(cell.x, cell.y)
 			
 			var right_cell = _get_cell(cell.x + 1, cell.y)
-			if right_cell and not cell.get_node("E").visible:
+			if right_cell and not cell.get_node("E").scale == Vector3.ONE:
 				var right_index = _get_cell_index(right_cell.x, right_cell.y)
 				_astar.connect_points(index, right_index)
 				
 			var bottom_cell = _get_cell(cell.x, cell.y + 1)
-			if bottom_cell and not cell.get_node("S").visible:
+			if bottom_cell and not cell.get_node("S").scale == Vector3.ONE:
 				var bottom_index = _get_cell_index(bottom_cell.x, bottom_cell.y)
 				_astar.connect_points(index, bottom_index)
 				

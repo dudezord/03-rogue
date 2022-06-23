@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://prefabs/maze/cell/Cell.gd" type="Script" id=1]
 
@@ -8,6 +8,8 @@
 albedo_color = Color( 0.741176, 0.305882, 0.305882, 1 )
 
 [sub_resource type="CubeMesh" id=2]
+
+[sub_resource type="BoxShape" id=7]
 
 [sub_resource type="BoxShape" id=6]
 
@@ -22,25 +24,61 @@ mesh = SubResource( 5 )
 skeleton = NodePath("../..")
 material/0 = SubResource( 4 )
 
-[node name="N" type="MeshInstance" parent="."]
-transform = Transform( 1.125, 0, 0, 0, 1, 0, 0, 0, 0.125, 0, 1, -1 )
+[node name="N" type="Spatial" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, -1 )
+
+[node name="Mesh" type="MeshInstance" parent="N"]
+transform = Transform( 1.125, 0, 0, 0, 1, 0, 0, 0, 0.125, 0, 0, 0 )
 mesh = SubResource( 2 )
+skeleton = NodePath("../..")
 material/0 = null
 
-[node name="S" type="MeshInstance" parent="."]
-transform = Transform( 1.125, 0, 0, 0, 1, 0, 0, 0, 0.125, 0, 1, 1 )
+[node name="Area" type="Area" parent="N/Mesh"]
+
+[node name="CollisionShape" type="CollisionShape" parent="N/Mesh/Area"]
+shape = SubResource( 7 )
+
+[node name="S" type="Spatial" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 1 )
+
+[node name="Mesh" type="MeshInstance" parent="S"]
+transform = Transform( 1.125, 0, 0, 0, 1, 0, 0, 0, 0.125, 0, 0, 0 )
 mesh = SubResource( 2 )
+skeleton = NodePath("../..")
 material/0 = null
 
-[node name="W" type="MeshInstance" parent="."]
-transform = Transform( 0.125, 0, 0, 0, 1, 0, 0, 0, 1.125, -1, 1, 0 )
+[node name="Area" type="Area" parent="S/Mesh"]
+
+[node name="CollisionShape" type="CollisionShape" parent="S/Mesh/Area"]
+shape = SubResource( 7 )
+
+[node name="W" type="Spatial" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 1, 0 )
+
+[node name="Mesh" type="MeshInstance" parent="W"]
+transform = Transform( 0.125, 0, 0, 0, 1, 0, 0, 0, 1.125, 0, 0, 0 )
 mesh = SubResource( 2 )
+skeleton = NodePath("../..")
 material/0 = null
 
-[node name="E" type="MeshInstance" parent="."]
-transform = Transform( 0.125, 0, 0, 0, 1, 0, 0, 0, 1.125, 1, 1, 0 )
+[node name="Area" type="Area" parent="W/Mesh"]
+
+[node name="CollisionShape" type="CollisionShape" parent="W/Mesh/Area"]
+shape = SubResource( 7 )
+
+[node name="E" type="Spatial" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1, 0 )
+
+[node name="Mesh" type="MeshInstance" parent="E"]
+transform = Transform( 0.125, 0, 0, 0, 1, 0, 0, 0, 1.125, 0, 0, 0 )
 mesh = SubResource( 2 )
+skeleton = NodePath("../..")
 material/0 = null
+
+[node name="Area" type="Area" parent="E/Mesh"]
+
+[node name="CollisionShape" type="CollisionShape" parent="E/Mesh/Area"]
+shape = SubResource( 7 )
 
 [node name="Area" type="Area" parent="."]
 transform = Transform( 1, 0, 0, 0, 0.05, 0, 0, 0, 1, 0, 0, 0 )
